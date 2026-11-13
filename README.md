@@ -23,6 +23,18 @@ Double-cliquez simplement sur `index.html` — le site s'ouvre dans votre naviga
 
 `assets/css/style.css` — tout le design. `assets/js/main.js` — menu mobile, animations, accordéons. `assets/img/` — logo, photos, favicon.
 
+## Version audio des articles
+
+Chaque article peut être écouté (bouton « Écouter » sur la liste des articles et sur la page de l'article). L'audio est créé automatiquement et gratuitement, sans service payant ni compte :
+
+1. Un article `article-*.html` est ajouté ou modifié, puis envoyé sur GitHub (branche `main`).
+2. L'automatisation `.github/workflows/article-audio.yml` lance `scripts/generate-audio.mjs`, qui extrait le titre et le texte (sans la bibliographie) et génère un MP3 avec Piper, un moteur de voix libre (voix française « Tom »).
+3. Le MP3 est enregistré dans `assets/audio/` et listé dans `assets/audio/manifest.json` ; le bouton apparaît alors tout seul, une à deux minutes après l'envoi.
+
+Pour générer en local : `bash scripts/setup-voice.sh` (une fois, nécessite Python, Node et ffmpeg), puis `node scripts/generate-audio.mjs`.
+
+Pour qu'un passage ne soit pas lu, ajouter l'attribut `data-audio-skip` à son élément HTML. Une nouvelle carte dans `articles.html` doit reprendre la structure des cartes existantes (`article-link` + `card-actions`).
+
 ## Mise en ligne
 
 Le site est 100 % statique : il se dépose tel quel chez n'importe quel hébergeur (OVH, Infomaniak, Netlify, Vercel, GitHub Pages…). Aucune base de données ni serveur nécessaire.

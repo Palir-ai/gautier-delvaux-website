@@ -1,0 +1,62 @@
+{
+  "article-categories-traumatismes": {
+    "src": "assets/audio/article-categories-traumatismes.mp3?v=f15403a4",
+    "title": "Les catégories de traumatismes psychiques : type I, II, complexe et indirect",
+    "duration": 347,
+    "hash": "f15403a46025060c"
+  },
+  "article-choc-emotionnel": {
+    "src": "assets/audio/article-choc-emotionnel.mp3?v=5d6e0386",
+    "title": "Aider une personne en état de choc émotionnel",
+    "duration": 202,
+    "hash": "5d6e0386ab4741ae"
+  },
+  "article-comment-fonctionne-emdr": {
+    "src": "assets/audio/article-comment-fonctionne-emdr.mp3?v=97cbb67a",
+    "title": "Comment fonctionne l'EMDR ?",
+    "duration": 528,
+    "hash": "97cbb67a6a0f52a9"
+  },
+  "article-definir-le-traumatisme": {
+    "src": "assets/audio/article-definir-le-traumatisme.mp3?v=c288e12b",
+    "title": "Définir le traumatisme psychique",
+    "duration": 403,
+    "hash": "c288e12bbf583a9d"
+  },
+  "article-evenement-traumatique": {
+    "src": "assets/audio/article-evenement-traumatique.mp3?v=b9ada3e8",
+    "title": "Qu'est-ce qu'un événement traumatique ?",
+    "duration": 325,
+    "hash": "b9ada3e885451af8"
+  },
+  "article-hygiene-du-sommeil": {
+    "src": "assets/audio/article-hygiene-du-sommeil.mp3?v=1737569f",
+    "title": "Hygiène du sommeil : ce qu'il faut éviter et privilégier pour mieux dormir",
+    "duration": 469,
+    "hash": "1737569fb0cd9b00"
+  },
+  "article-reactions-post-traumatiques": {
+    "src": "assets/audio/article-reactions-post-traumatiques.mp3?v=05f0d79e",
+    "title": "Un Regard sur les réactions Post-Traumatiques",
+    "duration": 190,
+    "hash": "05f0d79ec766a044"
+  },
+  "article-realite-virtuelle": {
+    "src": "assets/audio/article-realite-virtuelle.mp3?v=327a915d",
+    "title": "Apprivoiser ses peurs, à son rythme, grâce à la réalité virtuelle",
+    "duration": 217,
+    "hash": "327a915dccba56e7"
+  },
+  "article-symptomes-espt": {
+    "src": "assets/audio/article-symptomes-espt.mp3?v=88e57a3e",
+    "title": "Les symptômes de l'état de stress post-traumatique",
+    "duration": 442,
+    "hash": "88e57a3ec1df5b48"
+  },
+  "article-temps-ecran": {
+    "src": "assets/audio/article-temps-ecran.mp3?v=c59d33b8",
+    "title": "Smartphone & cerveau : inverser la boucle",
+    "duration": 485,
+    "hash": "c59d33b89797ec1e"
+  }
+}

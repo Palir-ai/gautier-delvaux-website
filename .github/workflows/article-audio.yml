@@ -1,0 +1,68 @@
+name: Audio des articles
+
+# À chaque article publié ou modifié, génère sa version audio avec une voix
+# libre et gratuite (Piper), l'ajoute au site et relance la mise en ligne.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "article-*.html"
+      - "scripts/**"
+      - ".github/workflows/article-audio.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: article-audio
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Récupérer la voix en cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/voices
+          key: piper-voice-fr_FR-tom-medium
+
+      - name: Installer la voix
+        run: bash scripts/setup-voice.sh
+
+      - name: Vérifier que la voix fonctionne
+        run: node scripts/generate-audio.mjs --check
+
+      - name: Générer les audios manquants ou modifiés
+        run: node scripts/generate-audio.mjs
+
+      - name: Publier les audios
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add assets/audio
+          if git diff --cached --quiet; then
+            echo "Aucun nouvel audio."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Audio des articles : mise à jour automatique"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          # Un push fait par l'automatisation ne relance pas toujours GitHub Pages : on le demande.
+          gh api -X POST "repos/${{ github.repository }}/pages/builds" || true
