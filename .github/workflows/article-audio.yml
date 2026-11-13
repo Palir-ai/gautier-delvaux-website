@@ -40,6 +40,9 @@ jobs:
           path: .cache/voices
           key: piper-voice-fr_FR-tom-medium
 
+      - name: Installer ffmpeg (conversion en MP3)
+        run: command -v ffmpeg >/dev/null || (sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg)
+
       - name: Installer la voix
         run: bash scripts/setup-voice.sh
 
