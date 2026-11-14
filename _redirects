@@ -1,0 +1,24 @@
+# Redirections permanentes des anciennes adresses (site Odoo) vers le nouveau site.
+# Les adresses /faq, /formations, /hypnotherapie et /psychotherapie-generale sont inchangées.
+
+/psychotherapies                      /psychotherapie-emdr        301
+/consultations-virtuelles             /consultations-en-ligne     301
+/visa-federal-psychologue-clinicien   /formations                 301
+/about-us                             /#a-propos                  301
+/our-services                         /#approches                 301
+/contactus                            /#infos                     301
+/website/info                         /                           301
+
+/blog/actualites-2/apprivoiser-peurs-realite-virtuelle-10                                          /article-realite-virtuelle             301
+/blog/actualites-2/reduire-temps-ecran-smartphone-plan-3-semaines-9                                /article-temps-ecran                   301
+/blog/actualites-2/les-symptomes-de-l-etat-de-stress-post-traumatique-8                            /article-symptomes-espt                301
+/blog/actualites-2/apres-l-immediat-un-regard-sur-les-reactions-post-traumatiques-7                /article-reactions-post-traumatiques   301
+/blog/actualites-2/les-categories-de-traumatismes-psychiques-type-i-ii-complexe-et-indirect-6      /article-categories-traumatismes       301
+/blog/actualites-2/qu-est-ce-qu-un-evenement-traumatique-5                                         /article-evenement-traumatique         301
+/blog/actualites-2/definir-le-traumatisme-psychique-4                                              /article-definir-le-traumatisme        301
+/blog/actualites-2/hygiene-du-sommeil-ce-qu-il-faut-eviter-et-privilegier-pour-mieux-dormir-3      /article-hygiene-du-sommeil            301
+/blog/actualites-2/comment-fonctionne-l-emdr-2                                                     /article-comment-fonctionne-emdr       301
+/blog/actualites-2/que-faire-pour-aider-une-personne-en-etat-de-choc-emotionnel-1                  /article-choc-emotionnel               301
+
+/blog      /articles   301
+/blog/*    /articles   301

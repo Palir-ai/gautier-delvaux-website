@@ -35,6 +35,39 @@ Pour générer en local : `bash scripts/setup-voice.sh` (une fois, nécessite Py
 
 Pour qu'un passage ne soit pas lu, ajouter l'attribut `data-audio-skip` à son élément HTML. Une nouvelle carte dans `articles.html` doit reprendre la structure des cartes existantes (`article-link` + `card-actions`).
 
+## Espace d'administration (`/admin`)
+
+Gautier se connecte sur `/admin` (e-mail + mot de passe) pour publier, modifier ou retirer des articles, consulter les statistiques de fréquentation et afficher un bandeau d'annonce. L'espace fonctionne uniquement sur Cloudflare Pages (pas sur GitHub Pages).
+
+| Élément | Emplacement |
+|---|---|
+| Écrans (connexion, éditeur, statistiques, réglages) | `admin/` |
+| Serveur : connexion, articles, réglages, statistiques | `functions/admin/api/[[path]].js`, `server/lib.js` |
+| Compteur de visites (sans cookie, totaux par jour uniquement) | `functions/api/hit.js` |
+| Réglages publiés (bandeau, écoute des articles) | `assets/data/site.json` |
+
+Publier un article depuis l'admin crée `article-<titre>.html`, met à jour `articles.html` et `sitemap.xml` dans le dépôt GitHub ; le site se remet en ligne tout seul environ une minute plus tard, et l'audio est généré par l'automatisation existante.
+
+Réglages à créer dans Cloudflare Pages (Settings → Variables and Secrets, et Bindings) :
+
+| Nom | Rôle |
+|---|---|
+| `DB` (liaison D1) | Base de données : mot de passe chiffré, brouillons, statistiques |
+| `ADMIN_EMAIL` | Adresse e-mail de connexion |
+| `SESSION_SECRET` (secret) | Longue valeur aléatoire, signe les sessions |
+| `SETUP_TOKEN` (secret) | Jeton du lien de création du mot de passe : `/admin/#setup=<jeton>`, utilisable une seule fois. Pour réinitialiser un mot de passe oublié, changer ce jeton et transmettre le nouveau lien. |
+| `GITHUB_TOKEN` (secret) | Jeton GitHub limité à ce dépôt (Contents : lecture et écriture) |
+| `GITHUB_REPO` | `Palir-ai/gautier-delvaux-website` |
+
+Test en local : créer `.dev.vars` avec ces valeurs, puis `npx wrangler@4.86.0 pages dev . --d1 DB=gautier-delvaux-admin`.
+
+## Référencement (SEO)
+
+- `_redirects` : redirections permanentes de toutes les anciennes adresses Odoo vers les nouvelles pages.
+- `sitemap.xml`, `robots.txt` : à déclarer dans Google Search Console après la mise en ligne.
+- `_headers` : les adresses de prévisualisation `*.pages.dev` et `/admin` ne sont pas indexées.
+- Les adresses officielles sont sans `.html` (`/faq`, `/formations`…) ; Cloudflare Pages les sert ainsi automatiquement.
+
 ## Mise en ligne
 
 Le site est 100 % statique : il se dépose tel quel chez n'importe quel hébergeur (OVH, Infomaniak, Netlify, Vercel, GitHub Pages…). Aucune base de données ni serveur nécessaire.

@@ -109,6 +109,7 @@
 
   /* Active nav state */
   var path = location.pathname.split("/").pop() || "index.html";
+  if (path.indexOf(".") === -1) path += ".html";
   document.querySelectorAll(".main-nav a, .mobile-menu a").forEach(function (a) {
     var href = a.getAttribute("href");
     if (!href || href.indexOf("http") === 0 || href.indexOf("#") === 0) return;
@@ -151,9 +152,7 @@
      Les audios sont générés automatiquement (scripts/generate-audio.mjs) et
      listés dans assets/audio/manifest.json. Un bouton « Écouter » est ajouté
      aux cartes d'articles et aux pages d'article qui ont un audio. */
-  var AUDIO_ENABLED = false; /* fonction masquée : passer à true pour réafficher les boutons « Écouter » */
-  (function () {
-    if (!AUDIO_ENABLED) return;
+  function initAudio() {
     var cards = document.querySelectorAll(".article-card");
     var articleBody = document.querySelector(".article-body");
     if ((!cards.length && !articleBody) || !window.fetch) return;
@@ -358,6 +357,81 @@
         render();
       })
       .catch(function () { /* pas d'audio disponible : le site reste inchangé */ });
+  }
+
+  /* Réglages modifiables depuis l'espace d'administration (assets/data/site.json) :
+     bandeau d'annonce et activation de l'écoute des articles. */
+  var script = document.currentScript;
+  var siteRoot = script && script.src ? new URL("../../", script.src).href : "";
+  if (window.fetch) {
+    fetch(siteRoot + "assets/data/site.json", { cache: "no-cache" })
+      .then(function (res) { return res.ok ? res.json() : {}; })
+      .then(function (site) {
+        if (site.audio) initAudio();
+        showBanner(site.banner);
+      })
+      .catch(function () { /* réglages indisponibles : le site reste inchangé */ });
+  }
+
+  function showBanner(banner) {
+    if (!banner || !banner.active || !banner.text) return;
+    var now = new Date();
+    var today = now.getFullYear() + "-" + ("0" + (now.getMonth() + 1)).slice(-2) + "-" + ("0" + now.getDate()).slice(-2);
+    if (banner.until && today > banner.until) return;
+    var key = "gd-banner:" + banner.text;
+    try { if (window.sessionStorage.getItem(key)) return; } catch (e) { /* stockage indisponible */ }
+    var bar = document.createElement("div");
+    bar.className = "site-banner";
+    bar.setAttribute("role", "status");
+    var text = document.createElement("span");
+    text.textContent = banner.text;
+    var close = document.createElement("button");
+    close.type = "button";
+    close.setAttribute("aria-label", "Fermer l'annonce");
+    close.textContent = "×";
+    close.addEventListener("click", function () {
+      bar.remove();
+      try { window.sessionStorage.setItem(key, "1"); } catch (e) { /* stockage indisponible */ }
+    });
+    bar.appendChild(text);
+    bar.appendChild(close);
+    document.body.insertBefore(bar, document.body.firstChild);
+  }
+
+  /* Statistiques de fréquentation : compteur maison, sans cookie ni donnée personnelle.
+     Seuls des totaux sont envoyés (page vue, nouvelle visite, site d'origine, clic de contact). */
+  (function () {
+    var host = location.hostname;
+    if (!/(^|\.)gautierdelvaux\.be$/.test(host) && host !== "localhost" && host !== "127.0.0.1") return;
+    try { if (window.localStorage.getItem("gd_no_stats")) return; } catch (e) { /* stockage indisponible */ }
+    function send(data) {
+      var payload = JSON.stringify(data);
+      try {
+        if (navigator.sendBeacon) navigator.sendBeacon("/api/hit", new Blob([payload], { type: "text/plain" }));
+        else if (window.fetch) fetch("/api/hit", { method: "POST", body: payload, keepalive: true });
+      } catch (e) { /* envoi impossible : sans conséquence */ }
+    }
+    var newVisit = false;
+    try {
+      if (!window.sessionStorage.getItem("gd_visit")) {
+        newVisit = true;
+        window.sessionStorage.setItem("gd_visit", "1");
+      }
+    } catch (e) { /* stockage indisponible */ }
+    var referrer = "";
+    try { if (document.referrer) referrer = new URL(document.referrer).hostname; } catch (e) { /* référent illisible */ }
+    send({ p: location.pathname, v: newVisit ? 1 : 0, r: referrer });
+
+    document.addEventListener("click", function (event) {
+      var link = event.target.closest && event.target.closest("a[href]");
+      if (!link || link.closest(".email-panel")) return;
+      var href = link.getAttribute("href");
+      var kind = href.indexOf("doctoranytime") > -1 ? "rdv"
+        : href.indexOf("wa.me") > -1 ? "whatsapp"
+        : href.indexOf("mailto:") === 0 ? "email"
+        : href.indexOf("tel:") === 0 ? "phone" : null;
+      if (kind) send({ e: kind });
+    }, true);
   })();
 
   /* Current year */

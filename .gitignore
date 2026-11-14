@@ -2,3 +2,6 @@
 _*.html
 
 .cache/
+.dev.vars
+.wrangler/
+node_modules/
