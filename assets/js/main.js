@@ -74,7 +74,9 @@
      Les audios sont générés automatiquement (scripts/generate-audio.mjs) et
      listés dans assets/audio/manifest.json. Un bouton « Écouter » est ajouté
      aux cartes d'articles et aux pages d'article qui ont un audio. */
+  var AUDIO_ENABLED = false; /* fonction masquée : passer à true pour réafficher les boutons « Écouter » */
   (function () {
+    if (!AUDIO_ENABLED) return;
     var cards = document.querySelectorAll(".article-card");
     var articleBody = document.querySelector(".article-body");
     if ((!cards.length && !articleBody) || !window.fetch) return;
