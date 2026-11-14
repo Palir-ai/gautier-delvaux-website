@@ -226,6 +226,110 @@ h3 { font-size: clamp(1.35rem, 2vw, 1.65rem); }
 .header-cta { flex-shrink: 0; }
 .header-cta .btn { padding: 0.8rem 1.7rem; font-size: 0.7rem; }
 
+/* Icônes de contact (e-mail, WhatsApp) */
+.header-cta { display: flex; align-items: center; gap: 1.4rem; }
+.header-contact { position: relative; display: flex; align-items: center; gap: 0.6rem; }
+.icon-btn {
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  border: 1px solid var(--gold-line);
+  color: var(--gold-dark);
+  display: grid;
+  place-items: center;
+  flex: none;
+  transition: all 0.4s var(--ease);
+}
+.icon-btn svg { width: 1.15rem; height: 1.15rem; display: block; }
+.icon-btn:hover,
+.icon-btn[aria-expanded="true"] {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: var(--white);
+}
+.icon-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.email-panel {
+  position: absolute;
+  top: calc(100% + 16px);
+  right: 0;
+  width: 320px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-top: 2px solid var(--gold);
+  box-shadow: 0 24px 60px rgba(46, 36, 20, 0.14);
+  padding: 1.4rem 1.5rem 1.1rem;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all 0.35s var(--ease);
+  z-index: 10;
+}
+.email-panel.open { opacity: 1; visibility: visible; transform: none; }
+.email-panel .ep-label {
+  font-size: 0.64rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+.email-panel .ep-address {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin: 0.5rem 0 1.2rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--line);
+}
+.email-panel .ep-address span {
+  font-size: 0.98rem;
+  color: var(--espresso);
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.email-panel .ep-copy {
+  flex: none;
+  font-family: var(--font-body);
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  background: none;
+  border: 1px solid var(--gold-line);
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+  transition: background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.email-panel .ep-copy:hover,
+.email-panel .ep-copy.done { background: var(--gold); border-color: var(--gold); color: var(--white); }
+.email-panel .ep-options { margin-top: 0.4rem; }
+.email-panel .ep-options a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  font-size: 0.92rem;
+  color: var(--ink);
+  transition: color 0.3s;
+}
+.email-panel .ep-options a::after { content: "→"; color: var(--gold-dark); transition: transform 0.3s var(--ease); }
+.email-panel .ep-options a:hover { color: var(--gold-deep); }
+.email-panel .ep-options a:hover::after { transform: translateX(4px); }
+.email-panel a:focus-visible,
+.email-panel button:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+.mobile-menu .mm-contact { display: flex; gap: 1rem; margin-top: 1.4rem; }
+.mobile-menu .mm-contact .icon-btn {
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  color: var(--gold);
+  border-color: rgba(185, 146, 83, 0.6);
+}
+.mobile-menu .mm-contact .icon-btn:hover { color: var(--white); }
+.mobile-menu .mm-contact .icon-btn svg { width: 1.3rem; height: 1.3rem; }
+.mobile-menu .mm-contact + .btn { margin-top: 1.4rem; }
+
 /* Dropdown (Approches) */
 .has-sub { position: relative; }
 .has-sub > a .chev { font-size: 0.6rem; margin-left: 0.35rem; color: var(--gold-dark); }

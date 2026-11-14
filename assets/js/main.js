@@ -30,6 +30,83 @@
     });
   }
 
+  /* Panneau e-mail : adresse à copier + ouverture dans une messagerie */
+  var emailToggle = document.querySelector("[data-email-toggle]");
+  if (emailToggle) {
+    var address = (emailToggle.getAttribute("href") || "").replace(/^mailto:/, "");
+    var panel = document.createElement("div");
+    panel.className = "email-panel";
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-label", "Écrire un e-mail");
+    panel.innerHTML =
+      '<div class="ep-label">E-mail</div>' +
+      '<div class="ep-address"><span></span><button type="button" class="ep-copy">Copier</button></div>' +
+      '<div class="ep-label">Ouvrir dans…</div>' +
+      '<div class="ep-options">' +
+        '<a data-ep="app">Mon application de messagerie</a>' +
+        '<a data-ep="gmail" target="_blank" rel="noopener">Gmail</a>' +
+        '<a data-ep="outlook" target="_blank" rel="noopener">Outlook</a>' +
+      "</div>";
+    var to = encodeURIComponent(address);
+    panel.querySelector(".ep-address span").textContent = address;
+    panel.querySelector('[data-ep="app"]').href = "mailto:" + address;
+    panel.querySelector('[data-ep="gmail"]').href = "https://mail.google.com/mail/?view=cm&fs=1&to=" + to;
+    panel.querySelector('[data-ep="outlook"]').href = "https://outlook.live.com/mail/0/deeplink/compose?to=" + to;
+    emailToggle.parentNode.appendChild(panel);
+
+    var copyBtn = panel.querySelector(".ep-copy");
+    var copyTimer = null;
+    function setPanel(open) {
+      panel.classList.toggle("open", open);
+      emailToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    }
+    function copied(ok) {
+      copyBtn.textContent = ok ? "Copié ✓" : "Sélectionnez l'adresse";
+      copyBtn.classList.toggle("done", ok);
+      clearTimeout(copyTimer);
+      copyTimer = setTimeout(function () {
+        copyBtn.textContent = "Copier";
+        copyBtn.classList.remove("done");
+      }, 2200);
+    }
+    function legacyCopy() {
+      var field = document.createElement("textarea");
+      field.value = address;
+      field.setAttribute("readonly", "");
+      field.style.position = "fixed";
+      field.style.opacity = "0";
+      document.body.appendChild(field);
+      field.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      document.body.removeChild(field);
+      copied(ok);
+    }
+    emailToggle.addEventListener("click", function (event) {
+      event.preventDefault();
+      setPanel(!panel.classList.contains("open"));
+    });
+    copyBtn.addEventListener("click", function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(address).then(function () { copied(true); }, legacyCopy);
+      } else {
+        legacyCopy();
+      }
+    });
+    panel.querySelectorAll(".ep-options a").forEach(function (a) {
+      a.addEventListener("click", function () { setPanel(false); });
+    });
+    document.addEventListener("click", function (event) {
+      if (!panel.contains(event.target) && !emailToggle.contains(event.target)) setPanel(false);
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && panel.classList.contains("open")) {
+        setPanel(false);
+        emailToggle.focus();
+      }
+    });
+  }
+
   /* Active nav state */
   var path = location.pathname.split("/").pop() || "index.html";
   document.querySelectorAll(".main-nav a, .mobile-menu a").forEach(function (a) {
